@@ -1,23 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { Download, Mail, Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { site } from "../lib/site-data";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <header className="site-header">
       <div className="shell header-inner">
-        <Link href="/" className="brand" aria-label="Naman Jain home">
+        <a href="/" className="brand" aria-label="Naman Jain home">
           <span className="brand-mark" aria-hidden="true">
             NJ
           </span>
@@ -25,12 +18,12 @@ export function SiteHeader() {
             <strong>Naman Jain</strong>
             <span>Product Manager</span>
           </span>
-        </Link>
+        </a>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <Link href="/#work">Work</Link>
-          <Link href="/#approach">Approach</Link>
-          <Link href="/#about">About</Link>
+          <a href="/#work">Work</a>
+          <a href="/#approach">Approach</a>
+          <a href="/#about">About</a>
           <a href={site.resume} download>
             <Download size={16} aria-hidden="true" />
             Resume
@@ -54,9 +47,15 @@ export function SiteHeader() {
 
       {open ? (
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          <Link href="/#work">Work</Link>
-          <Link href="/#approach">Approach</Link>
-          <Link href="/#about">About</Link>
+          <a href="/#work" onClick={() => setOpen(false)}>
+            Work
+          </a>
+          <a href="/#approach" onClick={() => setOpen(false)}>
+            Approach
+          </a>
+          <a href="/#about" onClick={() => setOpen(false)}>
+            About
+          </a>
           <a href={site.resume} download>
             Resume
           </a>

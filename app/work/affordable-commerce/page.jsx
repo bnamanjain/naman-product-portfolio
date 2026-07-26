@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -71,10 +70,10 @@ export default function AffordableCommerceCaseStudy() {
     <main id="main-content" className="case-study">
       <section className="case-hero">
         <div className="shell">
-          <Link className="back-link" href="/#work">
+          <a className="back-link" href="/#work">
             <ArrowLeft size={16} aria-hidden="true" />
             Back to selected work
-          </Link>
+          </a>
           <div className="case-hero-grid">
             <div className="case-hero-copy">
               <div className="case-tags">

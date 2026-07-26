@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -59,10 +58,10 @@ export default function HomePage() {
               commerce.
             </p>
             <div className="button-row">
-              <Link className="button primary" href={project.links.caseStudy}>
+              <a className="button primary" href={project.links.caseStudy}>
                 View flagship case
                 <ArrowRight size={17} aria-hidden="true" />
-              </Link>
+              </a>
               <a className="button secondary" href={site.resume} download>
                 <Download size={17} aria-hidden="true" />
                 Download resume
@@ -150,10 +149,10 @@ export default function HomePage() {
               </ul>
 
               <div className="button-row">
-                <Link className="button primary" href={project.links.caseStudy}>
+                <a className="button primary" href={project.links.caseStudy}>
                   Read case study
                   <ArrowRight size={17} aria-hidden="true" />
-                </Link>
+                </a>
                 <a
                   className="button secondary"
                   href={project.links.borrower}
@@ -166,7 +165,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <Link
+            <a
               className="featured-media"
               href={project.links.caseStudy}
               aria-label={`Read ${project.title} case study`}
@@ -183,7 +182,7 @@ export default function HomePage() {
                 <span>3 product bets</span>
                 <span>8 system diagrams</span>
               </div>
-            </Link>
+            </a>
           </article>
         </div>
       </section>
