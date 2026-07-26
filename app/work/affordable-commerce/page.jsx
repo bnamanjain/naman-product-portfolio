@@ -22,6 +22,9 @@ export const metadata = {
   title: "Affordable Commerce Case Study",
   description:
     "A zero-to-one product case study for affordability-first commerce inside a high-frequency UPI app.",
+  alternates: {
+    canonical: "/work/affordable-commerce",
+  },
 };
 
 const launchPlan = [
