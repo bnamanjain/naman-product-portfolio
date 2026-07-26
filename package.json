@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/build-static-export.mjs",
     "dev": "vinext dev",
     "build": "vinext build",
     "postbuild": "node scripts/copy-hosting-meta.mjs",
