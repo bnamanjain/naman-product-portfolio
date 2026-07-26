@@ -37,6 +37,16 @@ function observe(page, label) {
 }
 
 async function assertNoOverflow(page, label) {
+  await page
+    .waitForFunction(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth + 1,
+      undefined,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+
   const dimensions = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,
     scrollWidth: document.documentElement.scrollWidth,
