@@ -65,16 +65,19 @@ async function verifyHome(viewport, label) {
   await page.getByRole("heading", { name: "Naman Jain", exact: true }).waitFor();
   await assertNoOverflow(page, `${label} home`);
 
-  const wisprLink = page.getByRole("link", {
-    name: /Explore interactive concept/i,
-  }).last();
-  await wisprLink.waitFor();
-  const wisprHref = await wisprLink.getAttribute("href");
-  if (
-    wisprHref !==
-    "https://bnamanjain.github.io/wispr-flow-screen-aware-workflows-concept/"
-  ) {
-    failures.push(`${label} Wispr prototype link is missing or incorrect`);
+  const wisprCaseLink = page.getByRole("link", {
+    name: /Read Wispr Notetaker.*case study/i,
+  });
+  await wisprCaseLink.waitFor();
+  if ((await wisprCaseLink.getAttribute("href")) !== "/work/wispr-screen-context") {
+    failures.push(`${label} Wispr case-study link is missing or incorrect`);
+  }
+
+  const wisprPrototype = page.locator(
+    'a[href="https://bnamanjain.github.io/wispr-flow-screen-aware-workflows-concept/"]',
+  );
+  if ((await wisprPrototype.count()) < 1) {
+    failures.push(`${label} Wispr prototype link is missing`);
   }
 
   if (viewport.width <= 820) {
@@ -112,8 +115,30 @@ async function verifyHome(viewport, label) {
   await page.close();
 }
 
+async function verifyWisprCase(viewport, label) {
+  const page = await browser.newPage({ viewport });
+  observe(page, `${label} Wispr case`);
+  await page.goto(`${baseUrl}/work/wispr-screen-context`, {
+    waitUntil: "networkidle",
+  });
+  await page.getByRole("heading", {
+    name: "From meeting notes to executable work.",
+    exact: true,
+  }).waitFor();
+  await page.getByText("I started with the real product, not the mock.").waitFor();
+  await page.getByText("From remembering the meeting to understanding the work.").waitFor();
+  await assertNoOverflow(page, `${label} Wispr case`);
+  await page.screenshot({
+    path: new URL(`${label}-wispr-case.png`, outputDir).pathname,
+    fullPage: true,
+  });
+  await page.close();
+}
+
 await verifyHome({ width: 1440, height: 1000 }, "desktop");
 await verifyHome({ width: 390, height: 844 }, "mobile");
+await verifyWisprCase({ width: 1440, height: 1000 }, "desktop");
+await verifyWisprCase({ width: 390, height: 844 }, "mobile");
 
 for (const width of [360, 430, 768]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -127,6 +152,18 @@ for (const width of [360, 430, 768]) {
   }).waitFor();
   await assertNoOverflow(page, `case ${width}px`);
   await page.close();
+
+  const wisprPage = await browser.newPage({ viewport: { width, height: 900 } });
+  observe(wisprPage, `Wispr responsive ${width}`);
+  await wisprPage.goto(`${baseUrl}/work/wispr-screen-context`, {
+    waitUntil: "networkidle",
+  });
+  await wisprPage.getByRole("heading", {
+    name: "From meeting notes to executable work.",
+    exact: true,
+  }).waitFor();
+  await assertNoOverflow(wisprPage, `Wispr case ${width}px`);
+  await wisprPage.close();
 }
 
 const assetPage = await browser.newPage();

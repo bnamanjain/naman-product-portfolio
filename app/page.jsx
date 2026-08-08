@@ -2,17 +2,14 @@ import {
   ArrowRight,
   ArrowUpRight,
   BarChart3,
-  Bot,
   Check,
   Download,
   ExternalLink,
-  FileText,
   Github,
   Layers3,
   Linkedin,
   Mail,
   Network,
-  PlayCircle,
   ShieldCheck,
   Sparkles,
   Target,
@@ -193,76 +190,70 @@ export default function HomePage() {
             </a>
           </article>
 
-          <article className="concept-project">
-            <a
-              className="concept-media"
-              href={screenAwareProject.links.prototype}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Explore ${screenAwareProject.title} interactive concept`}
-            >
-              <div className="browser-bar">
-                <span />
-                <span />
-                <span />
-                <strong>Meeting → screen context → executable work</strong>
-              </div>
-              <img
-                src={screenAwareProject.cover}
-                alt="Wispr Flow screen-aware workflow showing a completed meeting and three generated outputs"
-              />
-              <div className="concept-media-badge">
-                <Sparkles size={14} aria-hidden="true" />
-                Interactive prototype
-              </div>
-            </a>
-
-            <div className="concept-copy">
+          <article className="featured-project wispr-project-card">
+            <div className="featured-copy">
               <div className="project-meta-line">
                 <span>{screenAwareProject.status}</span>
                 <span>{screenAwareProject.duration}</span>
               </div>
               <h3>{screenAwareProject.title}</h3>
-              <p className="concept-summary">{screenAwareProject.summary}</p>
+              <p className="featured-summary">{screenAwareProject.summary}</p>
 
-              <div className="concept-question">
-                <span>The product leap</span>
+              <div className="project-question">
+                <span>The product question</span>
                 <strong>{screenAwareProject.question}</strong>
               </div>
 
-              <ul className="concept-output-list" aria-label="Generated outputs">
-                {screenAwareProject.outputs.map((output, index) => {
-                  const Icon = [FileText, PlayCircle, Bot][index];
-                  return (
-                    <li key={output}>
-                      <Icon size={18} aria-hidden="true" />
-                      {output}
-                    </li>
-                  );
-                })}
+              <ul className="compact-check-list">
+                {screenAwareProject.highlights.map((highlight) => (
+                  <li key={highlight}>
+                    <Check size={17} aria-hidden="true" />
+                    {highlight}
+                  </li>
+                ))}
               </ul>
 
               <div className="button-row">
                 <a
                   className="button primary"
+                  href={screenAwareProject.links.caseStudy}
+                >
+                  Read case study
+                  <ArrowRight size={17} aria-hidden="true" />
+                </a>
+                <a
+                  className="button secondary"
                   href={screenAwareProject.links.prototype}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Explore interactive concept
+                  Open prototype
                   <ExternalLink size={16} aria-hidden="true" />
-                </a>
-                <a
-                  className="button secondary"
-                  href={screenAwareProject.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View source
-                  <Github size={16} aria-hidden="true" />
                 </a>
               </div>
             </div>
+
+            <a
+              className="featured-media"
+              href={screenAwareProject.links.caseStudy}
+              aria-label={`Read ${screenAwareProject.title} case study`}
+            >
+              <div className="browser-bar">
+                <span />
+                <span />
+                <span />
+                <strong>Evidence → product model → interactive prototype</strong>
+              </div>
+              <img
+                src={screenAwareProject.cover}
+                alt="Wispr Flow Screen Context concept showing a processed meeting and execution-ready outputs"
+              />
+              <div className="featured-media-caption">
+                <span>1 live test</span>
+                <span>2 Wispr surfaces</span>
+                <span>3 execution outputs</span>
+              </div>
+            </a>
           </article>
         </div>
       </section>

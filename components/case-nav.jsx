@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { caseNav } from "../lib/site-data";
 
-export function CaseNav() {
-  const [active, setActive] = useState("brief");
+export function CaseNav({ items = caseNav }) {
+  const [active, setActive] = useState(items[0]?.[0] || "brief");
 
   useEffect(() => {
-    const sections = caseNav
+    const sections = items
       .map(([id]) => document.getElementById(id))
       .filter(Boolean);
 
@@ -23,12 +23,12 @@ export function CaseNav() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [items]);
 
   return (
     <nav className="case-nav" aria-label="Case study sections">
       <div className="shell case-nav-inner">
-        {caseNav.map(([id, label]) => (
+        {items.map(([id, label]) => (
           <a key={id} href={`#${id}`} className={active === id ? "active" : ""}>
             {label}
           </a>
