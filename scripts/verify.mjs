@@ -61,7 +61,7 @@ async function assertNoOverflow(page, label) {
 async function verifyHome(viewport, label) {
   const page = await browser.newPage({ viewport });
   observe(page, label);
-  await page.goto(baseUrl, { waitUntil: "networkidle" });
+  await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Naman Jain", exact: true }).waitFor();
   await assertNoOverflow(page, `${label} home`);
 
@@ -119,7 +119,7 @@ async function verifyWisprCase(viewport, label) {
   const page = await browser.newPage({ viewport });
   observe(page, `${label} Wispr case`);
   await page.goto(`${baseUrl}/work/wispr-screen-context`, {
-    waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
   });
   await page.getByRole("heading", {
     name: "Wispr hears the meeting. What if it also understood the screen?",
@@ -145,7 +145,7 @@ for (const width of [360, 430, 768]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   observe(page, `responsive ${width}`);
   await page.goto(`${baseUrl}/work/affordable-commerce`, {
-    waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
   });
   await page.getByRole("heading", {
     name: "Affordable Commerce inside super.money",
@@ -157,7 +157,7 @@ for (const width of [360, 430, 768]) {
   const wisprPage = await browser.newPage({ viewport: { width, height: 900 } });
   observe(wisprPage, `Wispr responsive ${width}`);
   await wisprPage.goto(`${baseUrl}/work/wispr-screen-context`, {
-    waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
   });
   await wisprPage.getByRole("heading", {
     name: "Wispr hears the meeting. What if it also understood the screen?",
