@@ -246,7 +246,7 @@ export default function HomePage() {
               </div>
               <img
                 src={screenAwareProject.cover}
-                alt="Wispr Flow Screen Context concept showing a processed meeting and execution-ready outputs"
+                alt="Wispr product concept explaining what Notetaker does today, the missing visual context, and the proposed Screen Context add-on"
               />
               <div className="featured-media-caption">
                 <span>1 live test</span>

@@ -122,11 +122,12 @@ async function verifyWisprCase(viewport, label) {
     waitUntil: "networkidle",
   });
   await page.getByRole("heading", {
-    name: "From meeting notes to executable work.",
+    name: "Wispr hears the meeting. What if it also understood the screen?",
     exact: true,
   }).waitFor();
-  await page.getByText("I started with the real product, not the mock.").waitFor();
-  await page.getByText("From remembering the meeting to understanding the work.").waitFor();
+  await page.getByText("What Wispr currently does.").waitFor();
+  await page.getByText("Add one optional feature: Screen Context.").waitFor();
+  await page.getByText("The first output should be one clear visual action brief.").waitFor();
   await assertNoOverflow(page, `${label} Wispr case`);
   await page.screenshot({
     path: new URL(`${label}-wispr-case.png`, outputDir).pathname,
@@ -159,7 +160,7 @@ for (const width of [360, 430, 768]) {
     waitUntil: "networkidle",
   });
   await wisprPage.getByRole("heading", {
-    name: "From meeting notes to executable work.",
+    name: "Wispr hears the meeting. What if it also understood the screen?",
     exact: true,
   }).waitFor();
   await assertNoOverflow(wisprPage, `Wispr case ${width}px`);
