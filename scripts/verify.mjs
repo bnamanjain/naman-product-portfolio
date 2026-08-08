@@ -81,8 +81,22 @@ async function verifyHome(viewport, label) {
   }
 
   if (viewport.width <= 820) {
-    await page.getByRole("button", { name: "Open navigation" }).click();
-    await page.getByRole("navigation", { name: "Mobile navigation" }).waitFor();
+    const openMenu = page.getByRole("button", { name: "Open navigation" });
+    const mobileNavigation = page.getByRole("navigation", {
+      name: "Mobile navigation",
+    });
+    let menuOpened = false;
+    for (let attempt = 0; attempt < 3 && !menuOpened; attempt += 1) {
+      await openMenu.click();
+      menuOpened = await mobileNavigation
+        .waitFor({ timeout: 3000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!menuOpened) await page.waitForTimeout(1000);
+    }
+    if (!menuOpened) {
+      throw new Error(`${label} mobile navigation did not open`);
+    }
     await page.getByRole("button", { name: "Close navigation" }).click();
   }
 
