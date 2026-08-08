@@ -668,6 +668,148 @@ h3 {
   font-weight: 700;
 }
 
+.concept-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  min-height: 530px;
+  margin-top: 28px;
+  overflow: hidden;
+  border: 1px solid #30322f;
+  border-radius: 8px;
+  background: #171816;
+  box-shadow: 0 20px 50px rgba(18, 24, 20, 0.12);
+  color: #f6f5f0;
+}
+
+.concept-media {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid #30322f;
+  background: #11120f;
+}
+
+.concept-media .browser-bar {
+  border-bottom-color: #30322f;
+  background: #20211e;
+  color: #a9aea8;
+}
+
+.concept-media > img {
+  width: 100%;
+  height: calc(100% - 34px);
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 350ms ease;
+}
+
+.concept-media:hover > img {
+  transform: scale(1.012);
+}
+
+.concept-media-badge {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  background: rgba(17, 18, 15, 0.9);
+  color: #d4b5ff;
+  font-size: 10px;
+  font-weight: 720;
+  backdrop-filter: blur(10px);
+}
+
+.concept-copy {
+  padding: 40px;
+}
+
+.concept-copy .project-meta-line {
+  color: #c9a8fb;
+}
+
+.concept-copy h3 {
+  margin-top: 18px;
+  font-size: 34px;
+}
+
+.concept-summary {
+  margin-top: 18px;
+  color: #b7bcb6;
+  font-size: 16px;
+}
+
+.concept-question {
+  margin-top: 26px;
+  padding: 17px 0;
+  border-top: 1px solid #343733;
+  border-bottom: 1px solid #343733;
+}
+
+.concept-question span {
+  display: block;
+  margin-bottom: 7px;
+  color: #8f968f;
+  font-size: 11px;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+.concept-question strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.concept-output-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  list-style: none;
+}
+
+.concept-output-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d9dcd7;
+  font-size: 13px;
+  font-weight: 630;
+}
+
+.concept-output-list svg {
+  flex: 0 0 auto;
+  color: #b88cf3;
+}
+
+.concept-copy .button-row {
+  margin-top: 28px;
+}
+
+.concept-copy .button.primary {
+  background: #f5f3ed;
+  color: #191a18;
+}
+
+.concept-copy .button.primary:hover {
+  background: #d9f3e7;
+}
+
+.concept-copy .button.secondary {
+  border-color: #4d514c;
+  background: transparent;
+  color: #f5f3ed;
+}
+
+.concept-copy .button.secondary:hover {
+  border-color: #f5f3ed;
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .proof-band {
   padding: 94px 0;
   background: var(--ink);
@@ -2317,6 +2459,16 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .concept-project {
+    grid-template-columns: 1fr;
+  }
+
+  .concept-media {
+    min-height: 440px;
+    border-right: 0;
+    border-bottom: 1px solid #30322f;
+  }
+
   .featured-media {
     min-height: 460px;
     border-top: 1px solid var(--line);
@@ -2651,6 +2803,23 @@ h3 {
 
   .featured-copy {
     padding: 25px 21px 28px;
+  }
+
+  .concept-copy {
+    padding: 25px 21px 28px;
+  }
+
+  .concept-copy h3 {
+    font-size: 29px;
+  }
+
+  .concept-media {
+    min-height: 300px;
+  }
+
+  .concept-media-badge {
+    right: 10px;
+    bottom: 10px;
   }
 
   .featured-copy h3 {

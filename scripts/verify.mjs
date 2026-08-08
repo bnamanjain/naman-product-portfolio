@@ -65,6 +65,18 @@ async function verifyHome(viewport, label) {
   await page.getByRole("heading", { name: "Naman Jain", exact: true }).waitFor();
   await assertNoOverflow(page, `${label} home`);
 
+  const wisprLink = page.getByRole("link", {
+    name: /Explore interactive concept/i,
+  }).last();
+  await wisprLink.waitFor();
+  const wisprHref = await wisprLink.getAttribute("href");
+  if (
+    wisprHref !==
+    "https://bnamanjain.github.io/wispr-flow-screen-aware-workflows-concept/"
+  ) {
+    failures.push(`${label} Wispr prototype link is missing or incorrect`);
+  }
+
   if (viewport.width <= 820) {
     await page.getByRole("button", { name: "Open navigation" }).click();
     await page.getByRole("navigation", { name: "Mobile navigation" }).waitFor();

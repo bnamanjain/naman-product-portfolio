@@ -11,14 +11,14 @@ export const metadata = {
     template: "%s | Naman Jain",
   },
   description:
-    "Product portfolio of Naman Jain: consumer products, fintech, credit, payments, commerce, analytics, and growth systems.",
+    "Product portfolio of Naman Jain: consumer products, fintech, multimodal AI workflows, analytics, and growth systems.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Naman Jain | Product Manager",
     description:
-      "Evidence-led product work across consumer journeys, fintech systems, and measurable growth.",
+      "Evidence-led product work across consumer journeys, fintech systems, multimodal AI workflows, and measurable growth.",
     images: ["/assets/affordable-commerce/consumer-presenter.png"],
   },
 };
