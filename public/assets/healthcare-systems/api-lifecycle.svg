@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">API request lifecycle</title>
+  <desc id="description">A sanitized API lifecycle from client request through access control, validation, domain logic, transaction, response, and asynchronous side effects.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#668078"/></marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="13" flood-color="#173e33" flood-opacity=".10"/></filter>
+    <style>
+      .title{font:700 38px Inter,Arial,sans-serif;fill:#10241d}.sub{font:500 17px Inter,Arial,sans-serif;fill:#61736c}.eyebrow{font:800 12px Inter,Arial,sans-serif;letter-spacing:2px;fill:#1b6a50}.num{font:800 13px Inter,Arial,sans-serif;fill:#1b6a50}.label{font:700 17px Inter,Arial,sans-serif;fill:#10241d}.small{font:600 13px Inter,Arial,sans-serif;fill:#5f726a}.tiny{font:600 12px Inter,Arial,sans-serif;fill:#657970}.box{fill:#fff;stroke:#c8d3cd;stroke-width:2}.soft{fill:#eef5f1;stroke:#c6d8cf;stroke-width:2}.dark{fill:#173e33;stroke:#173e33;stroke-width:2}.darkLabel{font:700 17px Inter,Arial,sans-serif;fill:#fff}.coral{fill:#fff0e9;stroke:#e4a181;stroke-width:2}.line{fill:none;stroke:#668078;stroke-width:2.5;marker-end:url(#arrow)}.dash{fill:none;stroke:#7e998f;stroke-width:2;stroke-dasharray:8 8;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8faf8"/>
+  <text x="80" y="72" class="eyebrow">API DESIGN</text>
+  <text x="80" y="120" class="title">One request has a contract, a decision, and a safe outcome</text>
+  <text x="80" y="153" class="sub">The product requirement is not merely an endpoint—it includes access, validation, state rules, errors, observability, and side effects.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="240" width="190" height="150" rx="18" class="box"/>
+    <text x="108" y="276" class="num">01</text><text x="108" y="316" class="label">Client request</text>
+    <text x="108" y="347" class="small">intent + payload</text><text x="108" y="370" class="small">request ID</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="315" y="240" width="210" height="150" rx="18" class="soft"/>
+    <text x="343" y="276" class="num">02</text><text x="343" y="316" class="label">API boundary</text>
+    <text x="343" y="347" class="small">auth · role · version</text><text x="343" y="370" class="small">rate limit · context</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="570" y="240" width="210" height="150" rx="18" class="soft"/>
+    <text x="598" y="276" class="num">03</text><text x="598" y="316" class="label">Validate DTO</text>
+    <text x="598" y="347" class="small">types · required fields</text><text x="598" y="370" class="small">safe, clear errors</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="825" y="240" width="220" height="150" rx="18" class="dark"/>
+    <text x="853" y="276" class="num" fill="#8fe2bd">04</text><text x="853" y="316" class="darkLabel">Domain decision</text>
+    <text x="853" y="347" class="small" fill="#d5e4de">eligibility · state guard</text><text x="853" y="370" class="small" fill="#d5e4de">business rule · policy</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1090" y="240" width="200" height="150" rx="18" class="box"/>
+    <text x="1118" y="276" class="num">05</text><text x="1118" y="316" class="label">Transaction</text>
+    <text x="1118" y="347" class="small">write durable state</text><text x="1118" y="370" class="small">record audit/event</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1335" y="240" width="185" height="150" rx="18" class="box"/>
+    <text x="1363" y="276" class="num">06</text><text x="1363" y="316" class="label">Response</text>
+    <text x="1363" y="347" class="small">stable status</text><text x="1363" y="370" class="small">safe payload</text>
+  </g>
+  <path d="M270 315 H315" class="line"/><path d="M525 315 H570" class="line"/><path d="M780 315 H825" class="line"/><path d="M1045 315 H1090" class="line"/><path d="M1290 315 H1335" class="line"/>
+
+  <rect x="305" y="478" width="970" height="94" rx="16" class="coral"/>
+  <text x="340" y="515" class="label">Every stage is observable</text>
+  <text x="340" y="546" class="small">request ID · actor · latency · validation error · state transition · outcome · metric event</text>
+  <path d="M675 390 V478" class="dash"/><path d="M935 390 V478" class="dash"/><path d="M1190 390 V478" class="dash"/>
+
+  <g filter="url(#shadow)">
+    <rect x="250" y="650" width="265" height="120" rx="16" class="box"/>
+    <text x="280" y="688" class="eyebrow">EVENT</text><text x="280" y="728" class="label">Publish durable intent</text><text x="280" y="753" class="tiny">after the transaction commits</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="670" y="650" width="265" height="120" rx="16" class="soft"/>
+    <text x="700" y="688" class="eyebrow">QUEUE / OUTBOX</text><text x="700" y="728" class="label">Retry safely</text><text x="700" y="753" class="tiny">idempotency + dead-letter path</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1090" y="650" width="265" height="120" rx="16" class="box"/>
+    <text x="1120" y="688" class="eyebrow">CONSUMERS</text><text x="1120" y="728" class="label">Perform side effects</text><text x="1120" y="753" class="tiny">message · task · webhook · analytics</text>
+  </g>
+  <path d="M515 710 H670" class="line"/><path d="M935 710 H1090" class="line"/><path d="M1190 390 V610 H382 V650" class="dash"/>
+  <text x="80" y="842" class="tiny">A strong API specification names the happy path, rejected states, duplicate behavior, timeout behavior, events, and the metric that proves the journey worked.</text>
+</svg>

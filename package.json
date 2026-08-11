@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "resume": "node scripts/build-resume.mjs",
     "prebuild": "node scripts/build-static-export.mjs",
     "dev": "vinext dev",
-    "build": "vinext build",
+    "build": "SITES_BUILD=1 vinext build",
     "postbuild": "node scripts/copy-hosting-meta.mjs",
     "start": "vinext start",
     "verify": "node scripts/verify.mjs"
