@@ -15,6 +15,7 @@ import {
   Target,
 } from "lucide-react";
 import {
+  handshakeProject,
   project,
   proofMetrics,
   screenAwareProject,
@@ -118,7 +119,7 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-heading">
             <div>
-              <p className="section-kicker">Selected work · 02</p>
+              <p className="section-kicker">Selected work · 03</p>
               <h2>Product systems, designed end to end.</h2>
             </div>
             <p>
@@ -186,6 +187,73 @@ export default function HomePage() {
                 <span>2 live prototypes</span>
                 <span>3 product bets</span>
                 <span>8 system diagrams</span>
+              </div>
+            </a>
+          </article>
+
+          <article className="featured-project handshake-project-card">
+            <div className="featured-copy">
+              <div className="project-meta-line">
+                <span>{handshakeProject.status}</span>
+                <span>{handshakeProject.duration}</span>
+              </div>
+              <h3>{handshakeProject.title}</h3>
+              <p className="featured-summary">{handshakeProject.summary}</p>
+
+              <div className="project-question">
+                <span>The product question</span>
+                <strong>{handshakeProject.question}</strong>
+              </div>
+
+              <ul className="compact-check-list">
+                {handshakeProject.highlights.map((highlight) => (
+                  <li key={highlight}>
+                    <Check size={17} aria-hidden="true" />
+                    {highlight}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="button-row">
+                <a className="button primary" href={handshakeProject.links.caseStudy}>
+                  Read case study
+                  <ArrowRight size={17} aria-hidden="true" />
+                </a>
+                <a className="button secondary" href={handshakeProject.links.prototype}>
+                  Try prototype
+                  <ExternalLink size={16} aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+
+            <a
+              className="featured-media handshake-card-media"
+              href={handshakeProject.links.caseStudy}
+              aria-label={`Read ${handshakeProject.title} case study`}
+            >
+              <div className="browser-bar">
+                <span />
+                <span />
+                <span />
+                <strong>Doctor call · Rx handoff</strong>
+              </div>
+              <div className="handshake-card-visual" aria-hidden="true">
+                <div className="handshake-card-call">
+                  <span className="handshake-card-avatar">DR</span>
+                  <span className="handshake-card-avatar patient">P</span>
+                  <small>Live follow-up</small>
+                </div>
+                <div className="handshake-card-popup">
+                  <span>Agent alerted</span>
+                  <strong>Stay for the handoff</strong>
+                  <div><b>60</b> seconds</div>
+                  <i />
+                </div>
+              </div>
+              <div className="featured-media-caption">
+                <span>+35 pp handshake</span>
+                <span>Interactive mock</span>
+                <span>Production result</span>
               </div>
             </a>
           </article>

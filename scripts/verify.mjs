@@ -80,6 +80,14 @@ async function verifyHome(viewport, label) {
     failures.push(`${label} Wispr prototype link is missing`);
   }
 
+  const handshakeCaseLink = page.getByRole("link", {
+    name: /Read The 60-second Handshake case study/i,
+  });
+  await handshakeCaseLink.waitFor();
+  if ((await handshakeCaseLink.getAttribute("href")) !== "/work/allo-handshake") {
+    failures.push(`${label} Handshake case-study link is missing or incorrect`);
+  }
+
   if (viewport.width <= 820) {
     const openMenu = page.getByRole("button", { name: "Open navigation" });
     const mobileNavigation = page.getByRole("navigation", {
@@ -129,6 +137,30 @@ async function verifyHome(viewport, label) {
   await page.close();
 }
 
+async function verifyHandshakeCase(viewport, label) {
+  const page = await browser.newPage({ viewport });
+  observe(page, `${label} Handshake case`);
+  await page.goto(`${baseUrl}/work/allo-handshake`, {
+    waitUntil: "domcontentloaded",
+  });
+  await page.getByRole("heading", {
+    name: "The 60 seconds that protected a patient handoff.",
+    exact: true,
+  }).waitFor();
+  await page.getByText("~55% → ~90%", { exact: true }).first().waitFor();
+  await page.waitForTimeout(750);
+  await page.getByRole("button", { name: "Submit Rx & alert agent" }).click();
+  await page.getByText("Agent alerted · joining window", { exact: true }).waitFor();
+  await page.getByRole("button", { name: "Simulate agent joining" }).click();
+  await page.getByText(/Care agent joined · doctor can introduce and leave/i).waitFor();
+  await assertNoOverflow(page, `${label} Handshake case`);
+  await page.screenshot({
+    path: new URL(`${label}-handshake-case.png`, outputDir).pathname,
+    fullPage: true,
+  });
+  await page.close();
+}
+
 async function verifyWisprCase(viewport, label) {
   const page = await browser.newPage({ viewport });
   observe(page, `${label} Wispr case`);
@@ -154,6 +186,8 @@ await verifyHome({ width: 1440, height: 1000 }, "desktop");
 await verifyHome({ width: 390, height: 844 }, "mobile");
 await verifyWisprCase({ width: 1440, height: 1000 }, "desktop");
 await verifyWisprCase({ width: 390, height: 844 }, "mobile");
+await verifyHandshakeCase({ width: 1440, height: 1000 }, "desktop");
+await verifyHandshakeCase({ width: 390, height: 844 }, "mobile");
 
 for (const width of [360, 430, 768]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -179,6 +213,18 @@ for (const width of [360, 430, 768]) {
   }).waitFor();
   await assertNoOverflow(wisprPage, `Wispr case ${width}px`);
   await wisprPage.close();
+
+  const handshakePage = await browser.newPage({ viewport: { width, height: 900 } });
+  observe(handshakePage, `Handshake responsive ${width}`);
+  await handshakePage.goto(`${baseUrl}/work/allo-handshake`, {
+    waitUntil: "domcontentloaded",
+  });
+  await handshakePage.getByRole("heading", {
+    name: "The 60 seconds that protected a patient handoff.",
+    exact: true,
+  }).waitFor();
+  await assertNoOverflow(handshakePage, `Handshake case ${width}px`);
+  await handshakePage.close();
 }
 
 const assetPage = await browser.newPage();

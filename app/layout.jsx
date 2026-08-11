@@ -18,8 +18,22 @@ export const metadata = {
   openGraph: {
     title: "Naman Jain | Product Manager",
     description:
-      "Evidence-led product work across consumer journeys, fintech systems, multimodal AI workflows, and measurable growth.",
-    images: ["/assets/affordable-commerce/consumer-presenter.png"],
+      "Evidence-led product work across consumer journeys, fintech systems, healthcare operations, and measurable growth.",
+    images: [
+      {
+        url: "/og.png",
+        width: 1731,
+        height: 909,
+        alt: "The 60-second Handshake case study by Naman Jain",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Naman Jain | Product Manager",
+    description:
+      "The 60-second Handshake and other evidence-led product case studies.",
+    images: ["/og.png"],
   },
 };
 
