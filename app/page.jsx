@@ -14,8 +14,11 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { blogPosts } from "../lib/blog-data";
 import {
   handshakeProject,
+  healthcareSystemsProject,
+  operatingEvidence,
   project,
   proofMetrics,
   screenAwareProject,
@@ -52,20 +55,23 @@ export default function HomePage() {
       <section className="home-hero">
         <div className="shell home-hero-grid">
           <div className="hero-copy">
-            <p className="section-kicker">Product Manager · Bengaluru</p>
+            <p className="section-kicker">
+              Product Manager · Growth, Monetization & Analytics
+            </p>
             <h1>Naman Jain</h1>
             <p className="hero-statement">
-              I build consumer products where customer trust, operating systems,
-              and business economics have to work together.
+              I turn broken customer journeys into measurable growth and
+              scalable operating systems.
             </p>
             <p className="hero-detail">
-              Currently focused on product strategy, analytics, growth, and
-              zero-to-one fintech experiences across credit, payments, and
-              commerce.
+              At AlloHealth, I increased repeat revenue contribution from 33%
+              to 45%, lifted realized LTV, and shipped payout and automation
+              products. Now focused on B2C fintech across lending, payments,
+              trading, and wealth.
             </p>
             <div className="button-row">
-              <a className="button primary" href={project.links.caseStudy}>
-                View flagship case
+              <a className="button primary" href="/work/operating-evidence">
+                View production work
                 <ArrowRight size={17} aria-hidden="true" />
               </a>
               <a className="button secondary" href={site.resume} download>
@@ -75,7 +81,7 @@ export default function HomePage() {
             </div>
             <div className="availability-line">
               <span className="availability-dot" aria-hidden="true" />
-              Exploring product roles in fintech and consumer technology
+              Open to Product Manager roles in Bengaluru
             </div>
           </div>
 
@@ -100,18 +106,61 @@ export default function HomePage() {
               />
             </div>
             <div className="hero-project-label">
-              <span>Featured work</span>
+              <span>Independent fintech case</span>
               <strong>Affordable Commerce</strong>
               <small>Borrower mobile · Seller web · Lending platform</small>
             </div>
           </div>
         </div>
         <div className="shell hero-index">
-          <span>Strategy</span>
-          <span>Product design</span>
-          <span>Unit economics</span>
-          <span>System architecture</span>
-          <span>Go-to-market</span>
+          <span>Lifecycle growth</span>
+          <span>Monetization</span>
+          <span>Product analytics</span>
+          <span>Financial systems</span>
+          <span>AI operations</span>
+        </div>
+      </section>
+
+      <section className="section evidence-section" id="experience">
+        <div className="shell">
+          <div className="section-heading">
+            <div>
+              <p className="section-kicker">Production work · AlloHealth</p>
+              <h2>Products shipped. Business metrics moved.</h2>
+            </div>
+            <p>
+              Aggregate operating evidence from my Founder&apos;s Office and
+              Repeat Business roles. No confidential customer data is shown.
+            </p>
+          </div>
+
+          <div className="evidence-grid">
+            {operatingEvidence.map((item) => (
+              <a
+                className="evidence-card"
+                href={`/work/operating-evidence#${item.id}`}
+                key={item.id}
+              >
+                <div className="evidence-card-top">
+                  <span>{item.number}</span>
+                  <p>{item.eyebrow}</p>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </div>
+                <h3>{item.title}</h3>
+                <p className="evidence-summary">{item.summary}</p>
+                <div className="evidence-metrics">
+                  {item.metrics.map((metric) => (
+                    <strong key={metric}>{metric}</strong>
+                  ))}
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <a className="text-link evidence-deep-dive" href="/work/operating-evidence">
+            Read the complete operating evidence
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
         </div>
       </section>
 
@@ -119,12 +168,13 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-heading">
             <div>
-              <p className="section-kicker">Selected work · 03</p>
-              <h2>Product systems, designed end to end.</h2>
+              <p className="section-kicker">Selected work · 04</p>
+              <h2>Business outcomes, product depth, and system thinking.</h2>
             </div>
             <p>
-              My case studies show the product decision, the user experience,
-              the operating model, and the economics in one connected system.
+              Production case studies and independent product concepts show how
+              I work from customer problem to measurable, reliable operating
+              model.
             </p>
           </div>
 
@@ -323,6 +373,72 @@ export default function HomePage() {
               </div>
             </a>
           </article>
+
+          <article className="featured-project systems-feature-project">
+            <div className="featured-copy">
+              <div className="project-meta-line">
+                <span>{healthcareSystemsProject.status}</span>
+                <span>{healthcareSystemsProject.duration}</span>
+              </div>
+              <h3>{healthcareSystemsProject.title}</h3>
+              <p className="featured-summary">
+                {healthcareSystemsProject.summary}
+              </p>
+
+              <div className="project-question">
+                <span>The systems question</span>
+                <strong>
+                  How do complex customer journeys become explicit, measurable,
+                  and recoverable production workflows?
+                </strong>
+              </div>
+
+              <ul className="compact-check-list">
+                {healthcareSystemsProject.chapters.map((chapter) => (
+                  <li key={chapter}>
+                    <Check size={17} aria-hidden="true" />
+                    {chapter}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="button-row">
+                <a
+                  className="button primary"
+                  href={healthcareSystemsProject.links.caseStudy}
+                >
+                  Read systems case study
+                  <ArrowRight size={17} aria-hidden="true" />
+                </a>
+                <a className="button secondary" href="/work/operating-evidence">
+                  View business outcomes
+                </a>
+              </div>
+            </div>
+
+            <a
+              className="featured-media systems-feature-media"
+              href={healthcareSystemsProject.links.caseStudy}
+              aria-label={`Read ${healthcareSystemsProject.title} case study`}
+            >
+              <div className="browser-bar">
+                <span />
+                <span />
+                <span />
+                <strong>Sanitized system context</strong>
+              </div>
+              <img
+                src={healthcareSystemsProject.cover}
+                alt="Healthcare journey systems architecture overview"
+              />
+              <div className="featured-media-caption">
+                <span>Architecture</span>
+                <span>API design</span>
+                <span>Schema design</span>
+                <span>Reliability</span>
+              </div>
+            </a>
+          </article>
         </div>
       </section>
 
@@ -333,8 +449,8 @@ export default function HomePage() {
             <h2>Measured outcomes from my current operating work.</h2>
             <p>
               At AlloHealth, I own customer journeys and business metrics across
-              checkout, fulfilment, lifecycle communication, repeat, and
-              operational efficiency.
+              checkout, fulfilment, lifecycle communication, repeat, payout
+              economics, and operational efficiency.
             </p>
           </div>
           <div className="proof-grid">
@@ -403,6 +519,50 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="section blog-preview-section" id="blog">
+        <div className="shell">
+          <div className="section-heading">
+            <div>
+              <p className="section-kicker">Writing</p>
+              <h2>Thinking in public, while the thinking is still alive.</h2>
+            </div>
+            <p>
+              Notes on product systems, fintech, markets, and making decisions
+              when certainty is unavailable.
+            </p>
+          </div>
+
+          <div className="blog-preview-grid">
+            {blogPosts.map((post, index) => (
+              <article className="blog-preview-card" key={post.slug}>
+                <div className="blog-preview-topline">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <time dateTime={post.dateISO}>{post.readingTime}</time>
+                </div>
+                <div className="blog-tags" aria-label="Topics">
+                  {post.tags.slice(0, 2).map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+                <h3>
+                  <a href={`/blog/${post.slug}`}>{post.title}</a>
+                </h3>
+                <p>{post.dek}</p>
+                <a className="text-link" href={`/blog/${post.slug}`}>
+                  Read essay
+                  <ArrowRight size={15} aria-hidden="true" />
+                </a>
+              </article>
+            ))}
+          </div>
+
+          <a className="text-link blog-view-all" href="/blog">
+            View all writing
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
       <section className="section about-section" id="about">
         <div className="shell about-grid">
           <div>
@@ -411,16 +571,20 @@ export default function HomePage() {
           </div>
           <div className="about-copy">
             <p>
-              I am a Product Manager in AlloHealth’s Founder’s Office, working
-              across a healthcare customer journey that serves more than 20,000
-              consultations each month. My work spans discovery, analytics,
-              checkout, fulfilment, lifecycle communication, experiments, and
-              cross-functional delivery.
+              I joined AlloHealth&apos;s Founder&apos;s Office in June 2024, first
+              working on P&amp;L, supply-chain economics, doctor payouts, and
+              fundraising diligence. Since March 2025, I have led Repeat
+              Business across the full post-purchase customer journey, leading
+              2 analysts, 2 engineering interns, 2 customer experience managers,
+              and specialised AI agents.
             </p>
             <p>
               Before that, I worked on research and AI-assisted product concepts
               at Cactus Communications. I hold a B.E. in Electronics and
-              Telecommunication from RV College of Engineering.
+              Telecommunication from RV College of Engineering. I also managed
+              a ₹10L pledged-capital trading account to approximately ₹16L over
+              two years in college, building hands-on interest in equities,
+              derivatives, bonds, REITs, and market risk.
             </p>
             <div className="about-actions">
               <a href={site.linkedin} target="_blank" rel="noreferrer">
@@ -431,6 +595,11 @@ export default function HomePage() {
               <a href={site.github} target="_blank" rel="noreferrer">
                 <Github size={17} aria-hidden="true" />
                 GitHub
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </a>
+              <a href={site.tableau} target="_blank" rel="noreferrer">
+                <BarChart3 size={17} aria-hidden="true" />
+                Tableau
                 <ArrowUpRight size={15} aria-hidden="true" />
               </a>
               <a href={`mailto:${site.email}`}>

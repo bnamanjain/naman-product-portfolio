@@ -21,9 +21,10 @@ export function SiteHeader() {
         </a>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <a href="/#work">Work</a>
-          <a href="/#approach">Approach</a>
           <a href="/#about">About</a>
+          <a href="/#experience">Experience</a>
+          <a href="/#work">Projects</a>
+          <a href="/blog">Blog</a>
           <a href={site.resume} download>
             <Download size={16} aria-hidden="true" />
             Resume
@@ -47,14 +48,17 @@ export function SiteHeader() {
 
       {open ? (
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          <a href="/#work" onClick={() => setOpen(false)}>
-            Work
-          </a>
-          <a href="/#approach" onClick={() => setOpen(false)}>
-            Approach
-          </a>
           <a href="/#about" onClick={() => setOpen(false)}>
             About
+          </a>
+          <a href="/#experience" onClick={() => setOpen(false)}>
+            Experience
+          </a>
+          <a href="/#work" onClick={() => setOpen(false)}>
+            Projects
+          </a>
+          <a href="/blog" onClick={() => setOpen(false)}>
+            Blog
           </a>
           <a href={site.resume} download>
             Resume

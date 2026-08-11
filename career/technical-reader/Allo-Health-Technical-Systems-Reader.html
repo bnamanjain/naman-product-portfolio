@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Allo Health Technical Systems Reader — Naman Jain</title>
+    <link rel="stylesheet" href="./reader.css" />
+  </head>
+  <body>
+    <section class="page cover">
+      <div class="cover-mark">
+        <span>Naman Jain · Personal learning reader</span>
+        <span>Private</span>
+      </div>
+      <div>
+        <h1>Allo Health<br />Technical Systems Reader</h1>
+        <p class="cover-deck">
+          Architecture, APIs, state machines, events, schemas, reliability, and
+          observability—explained in plain language through the product journeys
+          you worked on.
+        </p>
+      </div>
+      <div class="cover-bottom">
+        <div>
+          <span>Purpose</span>
+          <strong>Understand the concepts, speak accurately in interviews, and collaborate more deeply with engineering.</strong>
+        </div>
+        <div>
+          <span>Evidence boundary</span>
+          <strong>Based on a codebase review and your production product work; not a claim of sole backend authorship.</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">00 · How to use this reader</span><span>Allo Health Technical Systems</span></div>
+      <h2>Start with one mental model.</h2>
+      <p class="lede">
+        A digital healthcare product is not only a set of screens. It is a group
+        of systems that remember where a patient is, decide what is allowed,
+        coordinate work, recover from failure, and measure whether care and the
+        business moved forward.
+      </p>
+      <div class="private-note">
+        Private study note. Keep this document in your personal Drive. The public
+        portfolio uses only sanitized conceptual diagrams and does not expose code,
+        patient data, credentials, internal endpoints, or proprietary topology.
+      </div>
+      <div class="three-col">
+        <article class="card soft">
+          <span class="number">01</span>
+          <h3>State is memory</h3>
+          <p>It answers: where is this patient, appointment, order, task, or payout right now?</p>
+        </article>
+        <article class="card soft">
+          <span class="number">02</span>
+          <h3>Events are facts</h3>
+          <p>They answer: what happened, when did it happen, and what should react to it?</p>
+        </article>
+        <article class="card soft">
+          <span class="number">03</span>
+          <h3>APIs are promises</h3>
+          <p>They define how one product or system may ask another system to do something.</p>
+        </article>
+      </div>
+      <div class="plain-box">
+        <strong>The restaurant analogy</strong>
+        <p>
+          The interface is the menu. The API is the waiter taking a structured
+          order. The domain service is the kitchen deciding whether it can be made.
+          The database is the order book. The queue is the ticket rail. Events tell
+          other stations what happened. Logs and dashboards are the manager’s view
+          of delays, errors, waste, and completed orders.
+        </p>
+      </div>
+      <h3>Suggested reading path</h3>
+      <ol class="flow-list">
+        <li><strong>Pages 3–7:</strong> learn the architecture, API, event, state, and schema vocabulary.</li>
+        <li><strong>Pages 8–10:</strong> apply the concepts to booking, repeat, chatbot, payout, and fulfilment.</li>
+        <li><strong>Pages 11–12:</strong> learn observability, your contribution boundary, and interview language.</li>
+        <li><strong>Page 13:</strong> use the glossary when a technical term is unfamiliar.</li>
+      </ol>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">01 · Architecture</span><span>The map before the streets</span></div>
+      <h2>What kind of system is this?</h2>
+      <p class="lede">
+        The reviewed codebase is a modular TypeScript backend. It keeps major
+        healthcare and business domains separate inside one deployable product,
+        while using asynchronous infrastructure for work that should not block a
+        user-facing request.
+      </p>
+      <table class="stack-table">
+        <thead><tr><th>Layer</th><th>Technology / pattern</th><th>What it means in simple language</th></tr></thead>
+        <tbody>
+          <tr><td>Application</td><td>NestJS + TypeScript; modular monolith</td><td>One main backend codebase split into domain modules with explicit responsibilities.</td></tr>
+          <tr><td>Runtimes</td><td>HTTP API, scheduled jobs, batch jobs</td><td>User requests, recurring work, and heavy offline work run through different entry points.</td></tr>
+          <tr><td>Durable data</td><td>MySQL + TypeORM + migrations</td><td>Business entities are stored relationally; migrations change structure in a controlled way.</td></tr>
+          <tr><td>Fast state</td><td>Redis / Valkey</td><td>Used for caching, rate limits, short-lived holds, locks, and deduplication.</td></tr>
+          <tr><td>Async work</td><td>RabbitMQ, queues, Redis Streams</td><td>Background consumers handle messages, tasks, webhooks, and other work independently.</td></tr>
+          <tr><td>Cloud</td><td>AWS storage, compute, queues, analytics</td><td>Managed infrastructure runs services, stores files, schedules batch work, and supports analysis.</td></tr>
+          <tr><td>AI</td><td>LLM orchestration, traces, vector search</td><td>Models can classify or answer with context, while traces support quality review.</td></tr>
+          <tr><td>Observability</td><td>Datadog + tracing + product analytics</td><td>Engineers and product teams can connect system behavior to journey and business outcomes.</td></tr>
+        </tbody>
+      </table>
+      <div class="plain-box">
+        <strong>Why a modular monolith can be a good choice</strong>
+        <p>
+          It keeps deployment and transactions simpler than dozens of independent
+          microservices, while still forcing clear module boundaries. A team can
+          later extract a high-scale or independently owned module if the cost is
+          justified. “Monolith” does not automatically mean “messy.”
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">02 · System context</span><span>One customer action, many responsibilities</span></div>
+      <h2>The full journey crosses layers.</h2>
+      <p class="lede">
+        A patient may see one button, but the outcome can touch identity, journey
+        state, scheduling, billing, messaging, tasks, analytics, and an external
+        partner. The diagram shows responsibilities, not exact internal topology.
+      </p>
+      <figure class="diagram">
+        <img src="../../public/assets/healthcare-systems/system-context.svg" alt="Healthcare system context diagram" />
+        <figcaption>Read left to right for the customer flow; read top to bottom for the technology and operating layers supporting it.</figcaption>
+      </figure>
+      <div class="two-col" style="margin-top:5mm">
+        <article class="card">
+          <h3>Product question</h3>
+          <p>Which system owns the truth at each step, and what must every channel see consistently?</p>
+        </article>
+        <article class="card">
+          <h3>Engineering question</h3>
+          <p>Where should logic execute, how is data persisted, and how do we isolate and recover from failures?</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">03 · API design</span><span>A contract between products and systems</span></div>
+      <h2>An API is more than a URL.</h2>
+      <p class="lede">
+        A complete API design defines the actor, input, validation, allowed state,
+        business decision, durable write, response, errors, duplicate behavior,
+        side effects, and instrumentation.
+      </p>
+      <figure class="diagram">
+        <img src="../../public/assets/healthcare-systems/api-lifecycle.svg" alt="API request lifecycle diagram" />
+        <figcaption>The critical product decision is usually inside the domain step: is this action allowed in the current business state?</figcaption>
+      </figure>
+      <div class="plain-box">
+        <strong>Example: book an appointment</strong>
+        <p>
+          Request: patient, slot, journey context, source, idempotency key. Decision:
+          patient is eligible and slot remains available. Response: confirmed booking
+          reference and current state. Side effects: reminder timer, provider calendar,
+          confirmation message, operations visibility, and analytics event.
+        </p>
+      </div>
+      <div class="two-col">
+        <article class="card coral"><h3>Weak specification</h3><p>“Create a booking API and send WhatsApp.”</p></article>
+        <article class="card soft"><h3>Strong specification</h3><p>Defines duplicate calls, slot races, rejected states, timeout behavior, committed truth, retry ownership, and the funnel event.</p></article>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">04 · State machines &amp; events</span><span>Memory plus a clock</span></div>
+      <h2>State says where. Events say what happened.</h2>
+      <p class="lede">
+        A state machine names valid stages and transitions. A domain event records a
+        meaningful fact. A scheduled event makes future work durable. A queue lets
+        consumers perform side effects without blocking the customer.
+      </p>
+      <figure class="diagram">
+        <img src="../../public/assets/healthcare-systems/journey-orchestration.svg" alt="Journey state and event orchestration diagram" />
+        <figcaption>A state transition can commit immediately, then trigger messages, tasks, webhooks, and metrics through asynchronous consumers.</figcaption>
+      </figure>
+      <table class="comparison-table" style="margin-top:5mm">
+        <thead><tr><th>Concept</th><th>Question it answers</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>State</td><td>Where is this entity now?</td><td>Appointment is booked; fulfilment is dispatched.</td></tr>
+          <tr><td>Transition</td><td>Is this change allowed?</td><td>Booked → completed is allowed after the consultation; cancelled → completed may be blocked.</td></tr>
+          <tr><td>Domain event</td><td>What important fact just occurred?</td><td>appointment.completed; invoice.confirmed.</td></tr>
+          <tr><td>Scheduled event</td><td>What must happen later?</td><td>Send reminder tomorrow; make repeat journey eligible after a window.</td></tr>
+          <tr><td>Consumer</td><td>Who reacts to the fact?</td><td>Messaging, task creation, payout ledger, analytics, or a partner webhook.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">05 · Schema design</span><span>How the business becomes data</span></div>
+      <h2>A schema is the product’s memory structure.</h2>
+      <p class="lede">
+        Tables and relationships should make customer state, operating work,
+        financial outcomes, and history easy to trace. A clean schema prevents
+        every dashboard or feature from inventing its own definition of truth.
+      </p>
+      <figure class="diagram">
+        <img src="../../public/assets/healthcare-systems/schema-model.svg" alt="Conceptual healthcare journey schema diagram" />
+        <figcaption>This is a conceptual model. It intentionally avoids real table names, fields, databases, and internal identifiers.</figcaption>
+      </figure>
+      <div class="three-col" style="margin-top:5mm">
+        <article class="card"><h3>Entity</h3><p>A thing with its own identity: person, appointment, order, payout ledger item.</p></article>
+        <article class="card"><h3>Relationship</h3><p>A stable link: an appointment belongs to a journey episode; a payout references its source.</p></article>
+        <article class="card"><h3>Index</h3><p>A structure that makes common lookups fast, such as active tasks by owner or appointments by patient.</p></article>
+      </div>
+      <div class="plain-box">
+        <strong>Product rule of thumb</strong>
+        <p>
+          Use explicit columns and relationships for concepts that drive product
+          logic, money, permissions, or reporting. Use JSON for genuinely flexible
+          metadata—not to avoid deciding what the core product entities mean.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">06 · Reliability patterns</span><span>Assume retries and partial failure</span></div>
+      <h2>“Exactly once” is a product behavior, not a wish.</h2>
+      <p class="lede">
+        Distributed systems repeat requests, lose connections, deliver messages late,
+        and fail after one side effect but before another. Reliability patterns make
+        the intended business outcome happen once—or make the exception visible.
+      </p>
+      <div class="two-col">
+        <article class="card soft"><h3>Idempotency</h3><p>Repeating the same request produces the same business outcome. Essential for bookings, ledger entries, payments, tasks, and outbound messages.</p></article>
+        <article class="card"><h3>Lock</h3><p>Temporarily prevents two actors from claiming the same scarce resource, such as an exact appointment slot.</p></article>
+        <article class="card"><h3>Outbox</h3><p>Stores a future event durably with the transaction so scheduled work is not lost if the process restarts.</p></article>
+        <article class="card"><h3>Retry tiers</h3><p>Transient failures are attempted again after increasing delays so a partner outage does not block the main request.</p></article>
+        <article class="card coral"><h3>Dead-letter queue</h3><p>Work that exhausted retries is retained for investigation or replay instead of disappearing silently.</p></article>
+        <article class="card"><h3>Audit history</h3><p>Records actor, request, previous state, next state, and time so teams can explain what happened.</p></article>
+      </div>
+      <h3 style="margin-top:7mm">Failure walkthrough: confirmation message fails</h3>
+      <ol class="flow-list">
+        <li>The booking transaction commits successfully and returns a booking reference.</li>
+        <li>A booking-created event is published or placed in a durable outbox.</li>
+        <li>The messaging consumer attempts delivery; the external provider times out.</li>
+        <li>The queue retries. Idempotency prevents a duplicate successful send.</li>
+        <li>After exhausted retries, failed work reaches a dead-letter path and an alert or operations view.</li>
+        <li>The booking remains true; only the notification side effect needs recovery.</li>
+      </ol>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">07 · Journey examples</span><span>Booking and repeat care</span></div>
+      <h2>Apply the concepts to the journeys you owned.</h2>
+      <h3>Appointment booking</h3>
+      <div class="mini-state">
+        <div>Eligible</div><div>Slot held</div><div>Booked</div><div>Joined</div><div>Completed</div>
+      </div>
+      <ol class="flow-list">
+        <li><strong>Availability:</strong> fetch candidate slots once and apply product rules such as provider, location, window, and cutoff.</li>
+        <li><strong>Concurrency:</strong> hold an exact slot with a short lock so two users cannot book it simultaneously.</li>
+        <li><strong>Command:</strong> authenticate, validate, check journey eligibility, and create the booking transaction.</li>
+        <li><strong>Events:</strong> update calendar, schedule reminders, send confirmation, create required tasks, and record funnel events.</li>
+        <li><strong>Exceptions:</strong> reschedule, cancel, miss, or complete through explicit transitions with their own downstream effects.</li>
+      </ol>
+
+      <h3 style="margin-top:8mm">Repeat journey</h3>
+      <div class="mini-state">
+        <div>Rx received</div><div>Eligible</div><div>Follow-up booked</div><div>Consumed</div><div>Completed</div>
+      </div>
+      <div class="two-col">
+        <article class="card">
+          <h3>Product state</h3>
+          <p>The episode tracks the patient’s current repeat stage and prevents channels from disagreeing about the next best action.</p>
+        </article>
+        <article class="card">
+          <h3>Operating state</h3>
+          <p>Messages, tasks, callbacks, fulfilment, and exceptions are tied to the same episode and can be measured by city, owner, and cohort.</p>
+        </article>
+      </div>
+      <div class="plain-box">
+        <strong>Connection to your business metric</strong>
+        <p>
+          Repeat revenue contribution and realized LTV are lagging outcomes. The
+          system exposes leading states: eligible, reached, self-booked, booked,
+          attended, fulfilled, and repurchased—each with an owner and failure reason.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">08 · Journey examples</span><span>Chatbot, tasks, payout, fulfilment</span></div>
+      <h2>Different domains reuse the same primitives.</h2>
+      <div class="two-col">
+        <article class="card soft">
+          <h3>AI chatbot and escalation</h3>
+          <p><strong>Flow:</strong> inbound message → conversation history → intent/classification → response or escalation → task/callback → outcome event.</p>
+          <p><strong>Controls:</strong> rate limits, URL/input sanitization, human review, escalation thresholds, traces, quality sampling, and conversation-level attributes.</p>
+        </article>
+        <article class="card">
+          <h3>Calling-task deduplication</h3>
+          <p><strong>Flow:</strong> journey event → objective and priority rules → existing-task lookup → expire/merge/create → carry forward context.</p>
+          <p><strong>Controls:</strong> stable patient/objective keys, latest relevant context, explicit expiry, owner visibility, and workload metrics.</p>
+        </article>
+        <article class="card">
+          <h3>Doctor payout platform</h3>
+          <p><strong>Flow:</strong> contract + rule version → source business event → calculation → ledger entry → approval → statement/payslip → payment initiation.</p>
+          <p><strong>Controls:</strong> unique source reference, slab and validity rules, append-safe adjustments, role-based approval, audit trail, and reconciliation.</p>
+        </article>
+        <article class="card coral">
+          <h3>Order fulfilment</h3>
+          <p><strong>Flow:</strong> pending → address confirmed → packed → dispatched → out for delivery → delivered, return, or cancellation.</p>
+          <p><strong>Controls:</strong> valid state transitions, partner reference, webhook deduplication, exception visibility, and event-driven customer communication.</p>
+        </article>
+      </div>
+      <div class="plain-box">
+        <strong>The reusable pattern</strong>
+        <p>
+          Identify the entity → define its states → specify allowed commands → commit
+          durable truth → publish events → execute side effects idempotently → trace
+          every outcome → measure the customer and business result.
+        </p>
+      </div>
+      <h3>Why this matters for fintech</h3>
+      <p>
+        The same mechanics power loan applications, mandates, repayments,
+        settlements, partner commissions, trade orders, portfolio rebalancing, and
+        collections: explicit states, auditable money movements, idempotent commands,
+        asynchronous side effects, and strong observability.
+      </p>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">09 · Observability</span><span>Know what happened before customers tell you</span></div>
+      <h2>Logs are not the same as product understanding.</h2>
+      <p class="lede">
+        Observability connects technical evidence to journey evidence. Datadog or
+        tracing can explain latency and errors; product analytics explains whether
+        users progressed; business metrics explain whether the operating model worked.
+      </p>
+      <div class="metric-ladder">
+        <div><span>System health</span><strong>Can it execute?</strong><p>Latency, error rate, queue age, retry count, duplicate rate, lock contention.</p></div>
+        <div><span>Journey health</span><strong>Did the user progress?</strong><p>Eligibility, conversion, drop-off reason, completion, turnaround time, exception rate.</p></div>
+        <div><span>Business health</span><strong>Was it valuable?</strong><p>Repeat revenue, LTV, payout cost/revenue, workload, margin, service quality.</p></div>
+      </div>
+      <div class="two-col">
+        <article class="card">
+          <h3>Log</h3>
+          <p>A timestamped record from one component: “validation failed” or “consumer retry 2.” Useful, but fragmented.</p>
+        </article>
+        <article class="card">
+          <h3>Trace</h3>
+          <p>Follows one request or event across components using a shared request/trace ID, revealing where time or failure occurred.</p>
+        </article>
+        <article class="card">
+          <h3>Metric</h3>
+          <p>A count, rate, duration, or gauge observed over time: errors/minute, queue age, completion rate, or weekly tasks.</p>
+        </article>
+        <article class="card soft">
+          <h3>Alert</h3>
+          <p>A rule that calls attention to a meaningful threshold. Good alerts are actionable and tied to an owner and runbook.</p>
+        </article>
+      </div>
+      <h3 style="margin-top:7mm">A product-ready monitoring brief</h3>
+      <ol class="flow-list">
+        <li>Name the business-critical command and its service-level expectation.</li>
+        <li>Attach request ID, actor type, entity ID, source channel, outcome, error class, and latency.</li>
+        <li>Define leading funnel events and one source of truth for the final business outcome.</li>
+        <li>Alert on both system failure and silent journey failure, such as a healthy API but zero confirmations sent.</li>
+        <li>Document manual recovery, replay safety, communication owner, and the metric used to close the incident.</li>
+      </ol>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">10 · Your contribution</span><span>How to state technical ownership accurately</span></div>
+      <h2>Claim the decisions you drove, not code you did not write.</h2>
+      <p class="lede">
+        Your credible technical story is strong: you owned customer and business
+        journeys, translated them into system requirements, collaborated on API and
+        event behavior, used technical evidence to diagnose failures, and drove rollout
+        and metrics. Engineering owned implementation details.
+      </p>
+      <table class="comparison-table">
+        <thead><tr><th>Area</th><th>Your defensible ownership</th><th>Avoid saying</th></tr></thead>
+        <tbody>
+          <tr><td>Architecture</td><td>Mapped journeys and responsibility boundaries; challenged handoffs, state, failure paths, and observability with engineering.</td><td>“I architected the complete Allo backend.”</td></tr>
+          <tr><td>APIs</td><td>Defined actors, payload requirements, success/error behavior, duplicate handling, downstream events, and partner needs.</td><td>“I implemented all production APIs.”</td></tr>
+          <tr><td>Schema</td><td>Defined product entities, relationships, states, reporting needs, auditability, and edge cases with engineering.</td><td>“I designed every database schema and migration.”</td></tr>
+          <tr><td>Reliability</td><td>Prioritized failure modes, manual fallback, alerts, feature flags, business guardrails, and safe operating behavior.</td><td>“I built RabbitMQ, Redis, and deployment infrastructure.”</td></tr>
+          <tr><td>Observability</td><td>Connected traces/logs/failure classification to funnel and business metrics; used Datadog, Langfuse, SQL, and dashboards.</td><td>“I owned all platform SRE.”</td></tr>
+        </tbody>
+      </table>
+      <blockquote class="quote">
+        “I did not code the full backend. I owned the product journey and worked
+        closely with engineering to make the technical contract explicit: states,
+        actors, API behavior, events, schema needs, failure handling, observability,
+        rollout, and the metric that proved the system worked.”
+      </blockquote>
+      <h3>Resume-sized version</h3>
+      <p>
+        Partnered with engineering on API contracts, webhook/event flows,
+        state-machine edge cases, entity relationships, observability, and failure
+        recovery across booking, chatbot, task, payout, and fulfilment systems.
+      </p>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">11 · Interview practice</span><span>Answer from problem to production</span></div>
+      <h2>Use one repeatable answer structure.</h2>
+      <div class="four-col">
+        <article class="card soft"><span class="number">01</span><h3>Business problem</h3><p>Baseline, user pain, operating constraint, and why it mattered.</p></article>
+        <article class="card soft"><span class="number">02</span><h3>System contract</h3><p>Entities, states, actors, API/event behavior, and failure paths.</p></article>
+        <article class="card soft"><span class="number">03</span><h3>Delivery</h3><p>Trade-offs, ownership, collaboration, rollout, and manual fallback.</p></article>
+        <article class="card soft"><span class="number">04</span><h3>Evidence</h3><p>System, journey, and business metrics; what changed afterward.</p></article>
+      </div>
+      <h3 style="margin-top:8mm">Practice questions</h3>
+      <ol class="flow-list">
+        <li><strong>How would you prevent two patients from booking the same slot?</strong> Discuss fresh availability, short-lived hold/lock, transactional booking, unique constraint, idempotency, and a clear “slot no longer available” response.</li>
+        <li><strong>Why use an event instead of calling every system synchronously?</strong> Explain response latency, partial failures, independent consumers, retries, and the need for durable delivery and idempotency.</li>
+        <li><strong>How would you model repeat care?</strong> Describe a journey episode, current state, transitions, scheduled eligibility, related appointments/orders/messages, and event history.</li>
+        <li><strong>How would you design payout data?</strong> Separate contract/rule version from append-safe ledger entries, approvals, payslips, transaction references, audit events, and adjustments.</li>
+        <li><strong>How do you know a chatbot works?</strong> Combine model/trace quality, containment, escalation correctness, next-action completion, self-booking, repeat contact, and customer outcome.</li>
+        <li><strong>What belongs in a PRD for an API-heavy feature?</strong> Actors, journey states, functional contract, edge cases, idempotency, errors, events, integration ownership, observability, migration, rollout, and support plan.</li>
+      </ol>
+      <div class="plain-box">
+        <strong>The interview habit to build</strong>
+        <p>
+          Never stop at the happy-path screen. Always add: current state, source of
+          truth, duplicate call, timeout, partial failure, customer message, operator
+          visibility, audit trail, rollout guardrail, and success metric.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header"><span class="eyebrow">12 · Glossary</span><span>Plain-language reference</span></div>
+      <h2>The technical terms you should own.</h2>
+      <dl class="glossary">
+        <div><dt>API</dt><dd>A structured contract that lets one product or system request data or an action from another.</dd></div>
+        <div><dt>Endpoint</dt><dd>One address and method within an API, such as creating a booking or fetching availability.</dd></div>
+        <div><dt>DTO</dt><dd>A typed request/response shape that defines fields and validation at the API boundary.</dd></div>
+        <div><dt>Authentication</dt><dd>Proving who the actor is. Authorization separately decides what that actor may do.</dd></div>
+        <div><dt>Webhook</dt><dd>An HTTP callback sent to another system when a relevant event occurs.</dd></div>
+        <div><dt>Entity</dt><dd>A business object with its own stable identity, data, and lifecycle.</dd></div>
+        <div><dt>Schema</dt><dd>The structure, fields, relationships, and constraints used to store data.</dd></div>
+        <div><dt>Migration</dt><dd>A controlled, versioned change to database structure or data.</dd></div>
+        <div><dt>Index</dt><dd>A data structure that makes chosen database lookups faster.</dd></div>
+        <div><dt>State machine</dt><dd>A model of valid states and the allowed transitions between them.</dd></div>
+        <div><dt>Domain event</dt><dd>A durable business fact that other parts of the system may react to.</dd></div>
+        <div><dt>Queue</dt><dd>A buffer that holds background work until a consumer can process it.</dd></div>
+        <div><dt>Consumer</dt><dd>A worker that reads queued messages and performs one defined action.</dd></div>
+        <div><dt>Idempotency</dt><dd>The property that repeating a command does not repeat the business outcome.</dd></div>
+        <div><dt>Lock</dt><dd>A temporary control that prevents concurrent actors from changing or claiming the same resource.</dd></div>
+        <div><dt>Cache</dt><dd>A faster temporary copy of data used to reduce latency or repeated computation.</dd></div>
+        <div><dt>Outbox</dt><dd>A durable database record of an event that should be published or executed later.</dd></div>
+        <div><dt>Retry</dt><dd>Trying failed work again, usually after a delay, when the failure may be temporary.</dd></div>
+        <div><dt>Dead-letter queue</dt><dd>A holding area for messages that exhausted retries and need investigation or replay.</dd></div>
+        <div><dt>Observability</dt><dd>The ability to understand system behavior using logs, metrics, traces, events, and alerts.</dd></div>
+        <div><dt>Trace ID</dt><dd>A shared identifier that follows one request or event across components.</dd></div>
+        <div><dt>Feature flag</dt><dd>A switch that enables a change for selected users or traffic without a new code deployment.</dd></div>
+        <div><dt>Source of truth</dt><dd>The authoritative system or record used when multiple surfaces show the same concept.</dd></div>
+        <div><dt>Adapter</dt><dd>A translation layer that lets internal logic work with an external provider’s contract.</dd></div>
+      </dl>
+      <p class="small-note" style="margin-top:6mm">
+        Reader prepared for Naman Jain from a high-level codebase review and the
+        production work described in his resume and portfolio. It intentionally
+        omits sensitive implementation details and should not be treated as official
+        company architecture documentation.
+      </p>
+    </section>
+  </body>
+</html>

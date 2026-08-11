@@ -19,7 +19,7 @@ import { screenAwareProject } from "../../../lib/site-data";
 export const metadata = {
   title: "Wispr Notetaker + Screen Context",
   description:
-    "A simple product proposal for connecting Wispr meeting notes to the exact screens and interface elements being discussed.",
+    "A product proposal for connecting Wispr meeting notes to the exact screens and interface elements being discussed.",
   alternates: {
     canonical: "/work/wispr-screen-context",
   },
@@ -169,7 +169,7 @@ export default function WisprScreenContextCaseStudy() {
                 alt="Wispr product concept comparing today’s meeting notes, the missing screen reference, and the proposed Screen Context add-on"
               />
             </div>
-            <div className="wispr-hero-caption simple">
+            <div className="wispr-hero-caption">
               <span>The proposal in one line</span>
               <strong>Words + exact screen → a task everyone understands</strong>
             </div>
@@ -195,18 +195,25 @@ export default function WisprScreenContextCaseStudy() {
 
             <div className="wispr-now-grid">
               <article>
-                <div className="wispr-now-icon"><Mic size={22} aria-hidden="true" /></div>
+                <div className="wispr-now-icon">
+                  <Mic size={22} aria-hidden="true" />
+                </div>
                 <span>Current product</span>
                 <h3>Notetaker</h3>
                 <p>Listens to meetings and produces written meeting intelligence.</p>
                 <ul>
                   {currentCapabilities.map((item) => (
-                    <li key={item}><Check size={15} aria-hidden="true" />{item}</li>
+                    <li key={item}>
+                      <Check size={15} aria-hidden="true" />
+                      {item}
+                    </li>
                   ))}
                 </ul>
               </article>
               <article>
-                <div className="wispr-now-icon"><FileCheck2 size={22} aria-hidden="true" /></div>
+                <div className="wispr-now-icon">
+                  <FileCheck2 size={22} aria-hidden="true" />
+                </div>
                 <span>Observed output</span>
                 <h3>What the final note contains</h3>
                 <p>
@@ -294,7 +301,10 @@ export default function WisprScreenContextCaseStudy() {
 
             <div className="wispr-proposal-list">
               {proposedCapabilities.map((item) => (
-                <div key={item}><Check size={17} aria-hidden="true" /><span>{item}</span></div>
+                <div key={item}>
+                  <Check size={17} aria-hidden="true" />
+                  <span>{item}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -348,7 +358,10 @@ export default function WisprScreenContextCaseStudy() {
               </div>
               <ul>
                 {briefFields.map((field) => (
-                  <li key={field}><Check size={16} aria-hidden="true" />{field}</li>
+                  <li key={field}>
+                    <Check size={16} aria-hidden="true" />
+                    {field}
+                  </li>
                 ))}
               </ul>
               <div className="visual-brief-example">

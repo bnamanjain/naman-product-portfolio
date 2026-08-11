@@ -11,7 +11,7 @@ export const metadata = {
     template: "%s | Naman Jain",
   },
   description:
-    "Product portfolio of Naman Jain: consumer products, fintech, multimodal AI workflows, analytics, and growth systems.",
+    "Product portfolio of Naman Jain: quantified growth, monetization, payout, analytics, AI operations, lending, and payments work.",
   alternates: {
     canonical: "/",
   },
